@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="GestionNotesEtudiant.Views.MotDePasseOubliePage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:c="clr-namespace:GestionNotesEtudiant.Controls"
+    xmlns:vm="clr-namespace:GestionNotesEtudiant.ViewModels"
+    x:DataType="vm:MotDePasseOublieViewModel"
+    BackgroundColor="{StaticResource Surface}">
+
+    <Grid RowDefinitions="Auto,*">
+        <c:EnTete Titre="Mot de passe oublié" Margin="8,8,0,0" />
+
+        <VerticalStackLayout Grid.Row="1" Padding="24,16">
+            <VerticalStackLayout IsVisible="{Binding Envoye, Converter={StaticResource Inverse}}">
+                <Label
+                    Text="Indiquez l'adresse de votre compte. Nous vous enverrons un lien pour choisir un nouveau mot de passe."
+                    Style="{StaticResource TexteCourantSecondaire}" />
+                <Label Text="Adresse e-mail" Style="{StaticResource LibelleChamp}" Margin="0,24,0,8" />
+                <c:ChampSaisie
+                    Text="{Binding Email}"
+                    Placeholder="nom@etablissement.cm"
+                    Clavier="Email"
+                    MessageErreur="{Binding ErreurEmail}" />
+                <Button Text="Envoyer le lien" Command="{Binding EnvoyerCommand}" Margin="0,24,0,0" />
+            </VerticalStackLayout>
+
+            <VerticalStackLayout IsVisible="{Binding Envoye}" Spacing="12">
+                <Border BackgroundColor="{StaticResource PrimaireClair}" StrokeThickness="0" StrokeShape="RoundRectangle 10" Padding="16">
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                        <Image Source="ic_info_primaire.png" WidthRequest="18" HeightRequest="18" VerticalOptions="Start" />
+                        <Label
+                            Grid.Column="1"
+                            Text="Si un compte correspond à cette adresse, un lien de réinitialisation vous a été envoyé. Pensez à vérifier vos courriers indésirables."
+                            FontSize="14"
+                            LineHeight="1.3" />
+                    </Grid>
+                </Border>
+                <Button Text="Retour à la connexion" Command="{Binding RetourConnexionCommand}" Style="{StaticResource BoutonSecondaire}" />
+            </VerticalStackLayout>
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>

@@ -3,12 +3,30 @@
     x:Class="GestionNotesEtudiant.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:GestionNotesEtudiant"
-    Title="GestionNotesEtudiant">
+    xmlns:vues="clr-namespace:GestionNotesEtudiant.Views"
+    Title="Barème"
+    Shell.FlyoutBehavior="Disabled"
+    Shell.NavBarIsVisible="False">
 
     <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
+        Route="connexion"
+        ContentTemplate="{DataTemplate vues:ConnexionPage}" />
 
+    <TabBar x:Name="Principal" Route="principal">
+        <ShellContent
+            Title="Cours"
+            Icon="onglet_cours.png"
+            Route="cours"
+            ContentTemplate="{DataTemplate vues:AccueilPage}" />
+        <ShellContent
+            Title="Étudiants"
+            Icon="onglet_etudiants.png"
+            Route="etudiants"
+            ContentTemplate="{DataTemplate vues:EtudiantsPage}" />
+        <ShellContent
+            Title="Profil"
+            Icon="onglet_profil.png"
+            Route="profil"
+            ContentTemplate="{DataTemplate vues:ProfilPage}" />
+    </TabBar>
 </Shell>

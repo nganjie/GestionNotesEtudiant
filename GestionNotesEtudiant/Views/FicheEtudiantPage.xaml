@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="GestionNotesEtudiant.Views.FicheEtudiantPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:c="clr-namespace:GestionNotesEtudiant.Controls"
+    xmlns:vm="clr-namespace:GestionNotesEtudiant.ViewModels"
+    Shell.TabBarIsVisible="False"
+    x:DataType="vm:FicheEtudiantViewModel">
+
+    <Grid RowDefinitions="Auto,*">
+        <c:EnTete Titre="{Binding Nom}" SousTitre="{Binding Details}" Margin="0,16,0,0" />
+
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="16,20,16,16" Spacing="10">
+                <Label Text="Résultats par UE" Style="{StaticResource Libelle}" />
+                <Label
+                    Text="Aucune note pour l'instant dans les unités de sa promotion."
+                    Style="{StaticResource TexteCourantSecondaire}"
+                    IsVisible="{Binding AucunResultat}" />
+                <VerticalStackLayout Spacing="10" BindableLayout.ItemsSource="{Binding Resultats}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="vm:ResultatUe">
+                            <Border Style="{StaticResource Carte}" Padding="16,14">
+                                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                                    <VerticalStackLayout Spacing="4">
+                                        <HorizontalStackLayout Spacing="8">
+                                            <Label Text="{Binding Code}" Style="{StaticResource TexteSecondaire}" VerticalOptions="Center" />
+                                            <c:Etiquette Texte="{Binding Badge}" Variante="{Binding VarianteBadge}" />
+                                        </HorizontalStackLayout>
+                                        <Label Text="{Binding Intitule}" Style="{StaticResource Libelle}" />
+                                        <Label Text="{Binding Detail}" Style="{StaticResource TexteSecondaire}" />
+                                    </VerticalStackLayout>
+                                    <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
+                                        <Label Text="{Binding Moyenne}" Style="{StaticResource Chiffre}" HorizontalOptions="End" />
+                                        <Label Text="moy. /20" Style="{StaticResource TexteSecondaire}" HorizontalOptions="End" />
+                                    </VerticalStackLayout>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>

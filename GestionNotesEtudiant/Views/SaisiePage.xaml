@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="GestionNotesEtudiant.Views.SaisiePage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:c="clr-namespace:GestionNotesEtudiant.Controls"
+    xmlns:vm="clr-namespace:GestionNotesEtudiant.ViewModels"
+    Shell.TabBarIsVisible="False"
+    x:DataType="vm:SaisieViewModel"
+    BackgroundColor="{StaticResource Surface}">
+
+    <Grid RowDefinitions="Auto,*,Auto">
+
+        <!-- En-tête et progression -->
+        <VerticalStackLayout BackgroundColor="{StaticResource Fond}" Padding="0,16,0,0">
+            <c:EnTete x:Name="Entete" Titre="{Binding Titre}" SousTitre="{Binding SousTitre}" />
+            <c:BarreProgression Valeur="{Binding Progression}" Margin="16,16,16,8" />
+            <Grid ColumnDefinitions="*,Auto" Padding="16,0,16,12">
+                <Label Text="{Binding Compteur}" Style="{StaticResource TexteSecondaire}" VerticalOptions="Center" />
+                <HorizontalStackLayout Grid.Column="1" Spacing="4">
+                    <Image Source="ic_appareil.png" WidthRequest="14" HeightRequest="14" VerticalOptions="Center" />
+                    <Label Text="{Binding EtatEnregistrement}" Style="{StaticResource TexteSecondaire}" VerticalOptions="Center" />
+                </HorizontalStackLayout>
+            </Grid>
+            <BoxView Style="{StaticResource Separateur}" />
+        </VerticalStackLayout>
+
+        <!-- Liste des étudiants -->
+        <CollectionView Grid.Row="1" ItemsSource="{Binding Lignes}" SelectionMode="None">
+            <CollectionView.EmptyView>
+                <Label
+                    Text="Aucun étudiant inscrit dans cette promotion."
+                    Style="{StaticResource TexteCourantSecondaire}"
+                    Margin="16,24" />
+            </CollectionView.EmptyView>
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="vm:LigneSaisie">
+                    <VerticalStackLayout Padding="16,0">
+                        <Grid ColumnDefinitions="*,Auto" Padding="0,8" RowDefinitions="Auto,Auto">
+                            <VerticalStackLayout VerticalOptions="Center" Spacing="1">
+                                <Label Text="{Binding Nom}" Style="{StaticResource Libelle}" />
+                                <Label Text="{Binding Matricule}" Style="{StaticResource TexteSecondaire}" />
+                                <VerticalStackLayout.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnNomTouche" />
+                                </VerticalStackLayout.GestureRecognizers>
+                            </VerticalStackLayout>
+                            <c:ChampSaisie
+                                Grid.Column="1"
+                                WidthRequest="70"
+                                Hauteur="46"
+                                Centre="True"
+                                TailleTexte="17"
+                                Placeholder="–"
+                                Clavier="Numeric"
+                                ReturnType="Next"
+                                LongueurMax="5"
+                                Text="{Binding Texte}"
+                                EstGrise="{Binding EstAbsent}"
+                                EnErreur="{Binding MessageErreur, Converter={StaticResource TexteNonVide}}"
+                                FocusPerdu="OnNoteQuittee"
+                                SemanticProperties.Description="{Binding Nom}" />
+                            <HorizontalStackLayout
+                                Grid.Row="1"
+                                Grid.ColumnSpan="2"
+                                HorizontalOptions="End"
+                                Spacing="6"
+                                Margin="0,6,0,0"
+                                IsVisible="{Binding MessageErreur, Converter={StaticResource TexteNonVide}}">
+                                <Image Source="ic_alerte_erreur.png" WidthRequest="15" HeightRequest="15" VerticalOptions="Center" />
+                                <Label Text="{Binding MessageErreur}" FontSize="13" TextColor="{StaticResource Erreur}" VerticalOptions="Center" />
+                            </HorizontalStackLayout>
+                        </Grid>
+                        <BoxView Style="{StaticResource Separateur}" />
+                    </VerticalStackLayout>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <!-- Actions -->
+        <VerticalStackLayout Grid.Row="2">
+            <BoxView Style="{StaticResource Separateur}" />
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="12" Padding="16,12,16,16">
+                <Button Text="Enregistrer" Style="{StaticResource BoutonSecondaire}" Command="{Binding EnregistrerCommand}" />
+                <Button Grid.Column="1" Text="Terminer" Command="{Binding TerminerCommand}" />
+            </Grid>
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>

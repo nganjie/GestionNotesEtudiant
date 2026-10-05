@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="GestionNotesEtudiant.Views.AccueilPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:c="clr-namespace:GestionNotesEtudiant.Controls"
+    xmlns:vm="clr-namespace:GestionNotesEtudiant.ViewModels"
+    x:DataType="vm:AccueilViewModel">
+
+    <ContentPage.Resources>
+        <!-- Carte squelette : affichage statique pendant le chargement (pas d'animation) -->
+        <ControlTemplate x:Key="CarteSquelette">
+            <Border Style="{StaticResource Carte}" Padding="18,16" Margin="0,0,0,12">
+                <Grid ColumnDefinitions="*,Auto" RowSpacing="8" RowDefinitions="Auto,Auto,Auto">
+                    <BoxView Style="{StaticResource BlocSquelette}" WidthRequest="56" HeightRequest="10" />
+                    <BoxView Grid.Row="1" Style="{StaticResource BlocSquelette}" WidthRequest="188" HeightRequest="16" />
+                    <BoxView Grid.Row="2" Style="{StaticResource BlocSquelette}" WidthRequest="146" HeightRequest="10" />
+                    <BoxView Grid.Column="1" Grid.RowSpan="3" Style="{StaticResource BlocSquelette}" WidthRequest="46" HeightRequest="30" VerticalOptions="Center" />
+                </Grid>
+            </Border>
+        </ControlTemplate>
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="Auto,*">
+
+        <!-- En-tête -->
+        <VerticalStackLayout Padding="16,28,16,0">
+            <Grid ColumnDefinitions="*,Auto">
+                <VerticalStackLayout Spacing="2" VerticalOptions="Center">
+                    <Label Text="{Binding Semestre}" Style="{StaticResource TexteSecondaire}" />
+                    <Label Text="Mes unités d'enseignement" FontFamily="{StaticResource PoliceGras}" FontSize="25" />
+                </VerticalStackLayout>
+                <Border
+                    Grid.Column="1"
+                    WidthRequest="46"
+                    HeightRequest="46"
+                    BackgroundColor="{StaticResource Surface}"
+                    StrokeShape="RoundRectangle 23"
+                    VerticalOptions="Start"
+                    SemanticProperties.Description="Mon profil">
+                    <Label
+                        Text="{Binding Initiales}"
+                        FontFamily="{StaticResource PoliceDemiGras}"
+                        FontSize="15"
+                        TextColor="{StaticResource Primaire}"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center" />
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ProfilCommand}" />
+                    </Border.GestureRecognizers>
+                </Border>
+            </Grid>
+
+            <!-- Bandeau hors connexion -->
+            <Border
+                Margin="0,14,0,0"
+                Padding="14,10"
+                BackgroundColor="{StaticResource ErreurClair}"
+                Stroke="{StaticResource Erreur}"
+                StrokeShape="RoundRectangle 10"
+                IsVisible="{Binding HorsConnexion}">
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                    <Image Source="ic_hors_connexion.png" WidthRequest="18" HeightRequest="18" VerticalOptions="Start" Margin="0,1,0,0" />
+                    <VerticalStackLayout Grid.Column="1" Spacing="1">
+                        <Label Text="Hors connexion" FontFamily="{StaticResource PoliceDemiGras}" TextColor="{StaticResource Erreur}" />
+                        <Label Text="{Binding DerniereSynchro}" FontSize="15" />
+                    </VerticalStackLayout>
+                </Grid>
+            </Border>
+        </VerticalStackLayout>
+
+        <!-- État de chargement -->
+        <VerticalStackLayout Grid.Row="1" Padding="16,12,16,0" IsVisible="{Binding EnChargement}">
+            <Label Text="Chargement de vos unités…" Style="{StaticResource TexteSecondaire}" Margin="0,0,0,12" />
+            <Border Style="{StaticResource Carte}" Padding="18,18" Margin="0,0,0,12">
+                <VerticalStackLayout Spacing="10">
+                    <BoxView Style="{StaticResource BlocSquelette}" WidthRequest="100" HeightRequest="10" />
+                    <BoxView Style="{StaticResource BlocSquelette}" WidthRequest="208" HeightRequest="16" />
+                    <BoxView Style="{StaticResource BlocSquelette}" HorizontalOptions="Fill" HeightRequest="6" />
+                    <BoxView Style="{StaticResource BlocSquelette}" WidthRequest="136" HeightRequest="10" />
+                </VerticalStackLayout>
+            </Border>
+            <ContentView ControlTemplate="{StaticResource CarteSquelette}" />
+            <ContentView ControlTemplate="{StaticResource CarteSquelette}" />
+            <ContentView ControlTemplate="{StaticResource CarteSquelette}" />
+        </VerticalStackLayout>
+
+        <!-- État d'erreur -->
+        <VerticalStackLayout Grid.Row="1" Padding="32,64,32,0" Spacing="12" IsVisible="{Binding AfficherErreur}">
+            <Label Text="Impossible de charger vos unités" FontFamily="{StaticResource PoliceGras}" FontSize="20" />
+            <Label
+                Text="Vérifiez votre connexion puis réessayez. Les notes déjà saisies restent enregistrées sur cet appareil."
+                Style="{StaticResource TexteCourantSecondaire}" />
+            <HorizontalStackLayout Spacing="16" Margin="0,12,0,0">
+                <Button Text="Réessayer" Command="{Binding ReessayerCommand}" Padding="20,0" />
+                <Button Text="Voir les brouillons" Command="{Binding VoirBrouillonsCommand}" Style="{StaticResource BoutonLien}" />
+            </HorizontalStackLayout>
+            <Label Text="{Binding CodeErreur}" FontSize="12" TextColor="{StaticResource TexteSecondaire}" />
+        </VerticalStackLayout>
+
+        <!-- Contenu -->
+        <CollectionView
+            Grid.Row="1"
+            ItemsSource="{Binding Unites}"
+            IsVisible="{Binding AfficherContenu}"
+            SelectionMode="None">
+            <CollectionView.Header>
+                <VerticalStackLayout Padding="16,12,16,0">
+                    <HorizontalStackLayout Spacing="6" Margin="0,0,0,12">
+                        <Image Source="ic_appareil.png" WidthRequest="15" HeightRequest="15" VerticalOptions="Center" />
+                        <Label Text="{Binding InfoStockage}" Style="{StaticResource TexteSecondaire}" VerticalOptions="Center" />
+                    </HorizontalStackLayout>
+
+                    <Border
+                        BackgroundColor="{StaticResource PrimaireClair}"
+                        StrokeThickness="0"
+                        StrokeShape="RoundRectangle 12"
+                        Padding="16,18"
+                        Margin="0,0,0,12"
+                        IsVisible="{Binding AfficherSaisie}">
+                        <VerticalStackLayout Spacing="0">
+                            <Label Text="SAISIE EN COURS" Style="{StaticResource Surtitre}" />
+                            <Label Text="{Binding Saisie.Titre}" Style="{StaticResource Libelle}" Margin="0,10,0,12" />
+                            <c:BarreProgression Valeur="{Binding Saisie.Ratio}" CouleurFond="#DCE2EF" />
+                            <BoxView Style="{StaticResource Separateur}" Color="#D3DAEA" Margin="0,16,0,6" />
+                            <Grid ColumnDefinitions="*,Auto">
+                                <Label Text="{Binding Saisie.Progression}" Style="{StaticResource TexteSecondaire}" VerticalOptions="Center" />
+                                <HorizontalStackLayout Grid.Column="1" Spacing="2" Padding="8,10,0,10">
+                                    <Label Text="Reprendre" Style="{StaticResource Lien}" VerticalOptions="Center" />
+                                    <Image Source="ic_chevron_primaire.png" WidthRequest="18" HeightRequest="18" VerticalOptions="Center" />
+                                    <HorizontalStackLayout.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding ReprendreCommand}" />
+                                    </HorizontalStackLayout.GestureRecognizers>
+                                </HorizontalStackLayout>
+                            </Grid>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Label
+                        Text="Aucune unité d'enseignement pour ce semestre."
+                        Style="{StaticResource TexteCourantSecondaire}"
+                        Margin="0,24,0,0"
+                        IsVisible="{Binding AucuneUnite}" />
+                </VerticalStackLayout>
+            </CollectionView.Header>
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="vm:UniteItem">
+                    <Border Style="{StaticResource Carte}" Margin="16,0,16,10" Padding="16,14">
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                            <VerticalStackLayout Spacing="4">
+                                <HorizontalStackLayout Spacing="8">
+                                    <Label Text="{Binding Code}" Style="{StaticResource TexteSecondaire}" VerticalOptions="Center" />
+                                    <c:Etiquette Texte="{Binding Statut}" Variante="{Binding VarianteStatut}" />
+                                </HorizontalStackLayout>
+                                <Label Text="{Binding Intitule}" Style="{StaticResource Libelle}" FontSize="17" />
+                                <Label Text="{Binding Details}" Style="{StaticResource TexteSecondaire}" />
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="0">
+                                <Label Text="{Binding Moyenne}" Style="{StaticResource Chiffre}" HorizontalOptions="End" />
+                                <Label Text="moy. /20" Style="{StaticResource TexteSecondaire}" HorizontalOptions="End" />
+                            </VerticalStackLayout>
+                        </Grid>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer
+                                Command="{Binding OuvrirCommand, Source={RelativeSource AncestorType={x:Type vm:AccueilViewModel}}, x:DataType=vm:AccueilViewModel}"
+                                CommandParameter="{Binding .}" />
+                        </Border.GestureRecognizers>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+
+            <CollectionView.Footer>
+                <BoxView HeightRequest="16" Color="Transparent" />
+            </CollectionView.Footer>
+        </CollectionView>
+    </Grid>
+</ContentPage>

@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="GestionNotesEtudiant.Views.ExportPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:c="clr-namespace:GestionNotesEtudiant.Controls"
+    xmlns:vm="clr-namespace:GestionNotesEtudiant.ViewModels"
+    Shell.TabBarIsVisible="False"
+    x:DataType="vm:ExportViewModel">
+
+    <Grid RowDefinitions="Auto,*,Auto">
+
+        <c:EnTete Titre="Exporter" SousTitre="{Binding SousTitre}" Margin="0,16,0,0" />
+
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="16,8,16,16" Spacing="12">
+                <Label Text="Format" Style="{StaticResource Libelle}" Margin="0,8,0,0" />
+                <Border Style="{StaticResource Carte}" Padding="16,14" StrokeShape="RoundRectangle 10">
+                    <Border.Triggers>
+                        <DataTrigger TargetType="Border" Binding="{Binding PdfSelectionne}" Value="True">
+                            <Setter Property="Stroke" Value="{StaticResource Primaire}" />
+                            <Setter Property="StrokeThickness" Value="2" />
+                        </DataTrigger>
+                    </Border.Triggers>
+                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="14">
+                        <Grid WidthRequest="22" HeightRequest="22" VerticalOptions="Center">
+                            <Border StrokeShape="Ellipse" Stroke="{StaticResource TexteSecondaire}" StrokeThickness="1.5">
+                                <Border.Triggers>
+                                    <DataTrigger TargetType="Border" Binding="{Binding PdfSelectionne}" Value="True">
+                                        <Setter Property="Stroke" Value="{StaticResource Primaire}" />
+                                    </DataTrigger>
+                                </Border.Triggers>
+                            </Border>
+                            <Ellipse Fill="{StaticResource PrimaireBrush}" WidthRequest="12" HeightRequest="12" IsVisible="{Binding PdfSelectionne}" />
+                        </Grid>
+                        <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                            <Label Text="PDF" Style="{StaticResource Libelle}" />
+                            <Label Text="Relevé prêt à imprimer ou à afficher" Style="{StaticResource TexteSecondaire}" />
+                        </VerticalStackLayout>
+                        <Label Grid.Column="2" Text="{Binding TaillePdf}" Style="{StaticResource TexteSecondaire}" VerticalOptions="Center" />
+                    </Grid>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ChoisirCommand}" CommandParameter="Pdf" />
+                    </Border.GestureRecognizers>
+                </Border>
+                <Border Style="{StaticResource Carte}" Padding="16,14" StrokeShape="RoundRectangle 10">
+                    <Border.Triggers>
+                        <DataTrigger TargetType="Border" Binding="{Binding CsvSelectionne}" Value="True">
+                            <Setter Property="Stroke" Value="{StaticResource Primaire}" />
+                            <Setter Property="StrokeThickness" Value="2" />
+                        </DataTrigger>
+                    </Border.Triggers>
+                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="14">
+                        <Grid WidthRequest="22" HeightRequest="22" VerticalOptions="Center">
+                            <Border StrokeShape="Ellipse" Stroke="{StaticResource TexteSecondaire}" StrokeThickness="1.5">
+                                <Border.Triggers>
+                                    <DataTrigger TargetType="Border" Binding="{Binding CsvSelectionne}" Value="True">
+                                        <Setter Property="Stroke" Value="{StaticResource Primaire}" />
+                                    </DataTrigger>
+                                </Border.Triggers>
+                            </Border>
+                            <Ellipse Fill="{StaticResource PrimaireBrush}" WidthRequest="12" HeightRequest="12" IsVisible="{Binding CsvSelectionne}" />
+                        </Grid>
+                        <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                            <Label Text="CSV" Style="{StaticResource Libelle}" />
+                            <Label Text="Fichier léger pour tableur" Style="{StaticResource TexteSecondaire}" />
+                        </VerticalStackLayout>
+                        <Label Grid.Column="2" Text="{Binding TailleCsv}" Style="{StaticResource TexteSecondaire}" VerticalOptions="Center" />
+                    </Grid>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ChoisirCommand}" CommandParameter="Csv" />
+                    </Border.GestureRecognizers>
+                </Border>
+                <Border Style="{StaticResource Carte}" Padding="16,14" StrokeShape="RoundRectangle 10">
+                    <Border.Triggers>
+                        <DataTrigger TargetType="Border" Binding="{Binding ExcelSelectionne}" Value="True">
+                            <Setter Property="Stroke" Value="{StaticResource Primaire}" />
+                            <Setter Property="StrokeThickness" Value="2" />
+                        </DataTrigger>
+                    </Border.Triggers>
+                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="14">
+                        <Grid WidthRequest="22" HeightRequest="22" VerticalOptions="Center">
+                            <Border StrokeShape="Ellipse" Stroke="{StaticResource TexteSecondaire}" StrokeThickness="1.5">
+                                <Border.Triggers>
+                                    <DataTrigger TargetType="Border" Binding="{Binding ExcelSelectionne}" Value="True">
+                                        <Setter Property="Stroke" Value="{StaticResource Primaire}" />
+                                    </DataTrigger>
+                                </Border.Triggers>
+                            </Border>
+                            <Ellipse Fill="{StaticResource PrimaireBrush}" WidthRequest="12" HeightRequest="12" IsVisible="{Binding ExcelSelectionne}" />
+                        </Grid>
+                        <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                            <Label Text="Excel (.xlsx)" Style="{StaticResource Libelle}" />
+                            <Label Text="Avec formules de moyenne" Style="{StaticResource TexteSecondaire}" />
+                        </VerticalStackLayout>
+                        <Label Grid.Column="2" Text="{Binding TailleExcel}" Style="{StaticResource TexteSecondaire}" VerticalOptions="Center" />
+                    </Grid>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ChoisirCommand}" CommandParameter="Excel" />
+                    </Border.GestureRecognizers>
+                </Border>
+
+                <Label Text="Contenu" Style="{StaticResource Libelle}" Margin="0,16,0,0" />
+                <VerticalStackLayout Spacing="2">
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="6">
+                    <CheckBox IsChecked="{Binding NotesParEvaluation}" VerticalOptions="Center" Margin="-10,0,0,0" />
+                    <Label Grid.Column="1" Text="Notes par évaluation" FontSize="16" VerticalOptions="Center">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnLibelleTouche" CommandParameter="NotesParEvaluation" />
+                        </Label.GestureRecognizers>
+                    </Label>
+                </Grid>
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="6">
+                    <CheckBox IsChecked="{Binding Moyennes}" VerticalOptions="Center" Margin="-10,0,0,0" />
+                    <Label Grid.Column="1" Text="Moyennes par UE" FontSize="16" VerticalOptions="Center">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnLibelleTouche" CommandParameter="Moyennes" />
+                        </Label.GestureRecognizers>
+                    </Label>
+                </Grid>
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="6">
+                    <CheckBox IsChecked="{Binding Statistiques}" VerticalOptions="Center" Margin="-10,0,0,0" />
+                    <Label Grid.Column="1" Text="Statistiques de la promotion" FontSize="16" VerticalOptions="Center">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnLibelleTouche" CommandParameter="Statistiques" />
+                        </Label.GestureRecognizers>
+                    </Label>
+                </Grid>
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="6">
+                    <CheckBox IsChecked="{Binding Anonymiser}" VerticalOptions="Center" Margin="-10,0,0,0" />
+                    <Label Grid.Column="1" Text="Anonymiser (matricules seuls)" FontSize="16" VerticalOptions="Center">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnLibelleTouche" CommandParameter="Anonymiser" />
+                        </Label.GestureRecognizers>
+                    </Label>
+                </Grid>
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <VerticalStackLayout Grid.Row="2" BackgroundColor="{StaticResource Surface}">
+            <BoxView Style="{StaticResource Separateur}" />
+            <Label
+                Text="Choisissez au moins un contenu à exporter."
+                Style="{StaticResource TexteSecondaire}"
+                Margin="16,10,16,0"
+                IsVisible="{Binding ContenuValide, Converter={StaticResource Inverse}}" />
+            <Grid Margin="16,12,16,16">
+                <Button Text="{Binding TexteBouton}" ImageSource="ic_telecharger_blanc.png" Command="{Binding ExporterCommand}" />
+                <ActivityIndicator
+                    IsRunning="{Binding EstOccupe}"
+                    IsVisible="{Binding EstOccupe}"
+                    Color="{StaticResource Surface}"
+                    WidthRequest="22"
+                    HeightRequest="22"
+                    HorizontalOptions="End"
+                    Margin="0,0,18,0" />
+            </Grid>
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>

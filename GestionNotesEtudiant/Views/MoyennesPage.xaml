@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="GestionNotesEtudiant.Views.MoyennesPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:c="clr-namespace:GestionNotesEtudiant.Controls"
+    xmlns:vm="clr-namespace:GestionNotesEtudiant.ViewModels"
+    Shell.TabBarIsVisible="False"
+    x:DataType="vm:MoyennesViewModel"
+    BackgroundColor="{StaticResource Surface}">
+
+    <ContentPage.Resources>
+        <Style x:Key="CarteStat" TargetType="Border" BasedOn="{StaticResource Carte}">
+            <Setter Property="Padding" Value="12,10" />
+            <Setter Property="StrokeShape" Value="RoundRectangle 10" />
+        </Style>
+        <Style x:Key="EnTeteColonne" TargetType="Label">
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="TextColor" Value="{StaticResource TexteSecondaire}" />
+            <Setter Property="VerticalOptions" Value="Center" />
+        </Style>
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="Auto,*,Auto">
+
+        <VerticalStackLayout BackgroundColor="{StaticResource Fond}" Padding="0,16,0,0">
+            <c:EnTete Titre="Moyennes" SousTitre="{Binding SousTitre}">
+                <c:EnTete.Action>
+                    <c:Etiquette Texte="{Binding Statut}" Variante="{Binding VarianteStatut}" VerticalOptions="Start" Margin="0,4,0,0" />
+                </c:EnTete.Action>
+            </c:EnTete>
+            <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8" Padding="16,16,16,16">
+                <Border Style="{StaticResource CarteStat}">
+                    <VerticalStackLayout Spacing="2">
+                        <Label Text="Moyenne UE" Style="{StaticResource TexteSecondaire}" />
+                        <Label Text="{Binding MoyenneUe}" Style="{StaticResource Chiffre}" />
+                    </VerticalStackLayout>
+                </Border>
+                <Border Grid.Column="1" Style="{StaticResource CarteStat}">
+                    <VerticalStackLayout Spacing="2">
+                        <Label Text="Validés (≥ 10)" Style="{StaticResource TexteSecondaire}" />
+                        <Label Text="{Binding Valides}" Style="{StaticResource Chiffre}" />
+                    </VerticalStackLayout>
+                </Border>
+                <Border Grid.Column="2" Style="{StaticResource CarteStat}">
+                    <VerticalStackLayout Spacing="2">
+                        <Label Text="Note max." Style="{StaticResource TexteSecondaire}" />
+                        <Label Text="{Binding NoteMax}" Style="{StaticResource Chiffre}" />
+                    </VerticalStackLayout>
+                </Border>
+            </Grid>
+            <BoxView Style="{StaticResource Separateur}" />
+        </VerticalStackLayout>
+
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="16,0">
+                <!-- En-tête du tableau -->
+                <Grid ColumnDefinitions="*,Auto,74" Padding="0,14">
+                    <Label Text="Étudiant" Style="{StaticResource EnTeteColonne}" />
+                    <HorizontalStackLayout Grid.Column="1" BindableLayout.ItemsSource="{Binding Colonnes}">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="x:String">
+                                <Label Text="{Binding .}" Style="{StaticResource EnTeteColonne}" WidthRequest="40" HorizontalTextAlignment="End" />
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </HorizontalStackLayout>
+                    <Label Grid.Column="2" Text="Moyenne" Style="{StaticResource EnTeteColonne}" HorizontalTextAlignment="End" />
+                </Grid>
+                <BoxView Style="{StaticResource Separateur}" />
+
+                <Label
+                    Text="Aucun étudiant inscrit dans cette promotion."
+                    Style="{StaticResource TexteCourantSecondaire}"
+                    Margin="0,20"
+                    IsVisible="{Binding AucunEtudiant}" />
+
+                <VerticalStackLayout BindableLayout.ItemsSource="{Binding Lignes}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="vm:LigneMoyenne">
+                            <VerticalStackLayout>
+                                <Grid ColumnDefinitions="*,Auto,74" Padding="0,14">
+                                    <HorizontalStackLayout Spacing="8">
+                                        <Label Text="{Binding Nom}" FontFamily="{StaticResource PoliceDemiGras}" FontSize="15" VerticalOptions="Center" LineBreakMode="TailTruncation" />
+                                        <c:Etiquette Texte="{Binding Badge}" Variante="{Binding VarianteBadge}" />
+                                    </HorizontalStackLayout>
+                                    <HorizontalStackLayout Grid.Column="1" BindableLayout.ItemsSource="{Binding Notes}">
+                                        <BindableLayout.ItemTemplate>
+                                            <DataTemplate x:DataType="x:String">
+                                                <Label
+                                                    Text="{Binding .}"
+                                                    FontSize="15"
+                                                    TextColor="{StaticResource TexteSecondaire}"
+                                                    WidthRequest="40"
+                                                    HorizontalTextAlignment="End"
+                                                    VerticalOptions="Center" />
+                                            </DataTemplate>
+                                        </BindableLayout.ItemTemplate>
+                                    </HorizontalStackLayout>
+                                    <Label
+                                        Grid.Column="2"
+                                        Text="{Binding Moyenne}"
+                                        TextColor="{Binding CouleurMoyenne}"
+                                        FontFamily="{StaticResource PoliceGras}"
+                                        FontSize="16"
+                                        HorizontalTextAlignment="End"
+                                        VerticalOptions="Center" />
+                                </Grid>
+                                <BoxView Style="{StaticResource Separateur}" />
+                            </VerticalStackLayout>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+
+                <Button
+                    Text="{Binding TexteSuivants}"
+                    Style="{StaticResource BoutonLien}"
+                    FontSize="15"
+                    HorizontalOptions="Center"
+                    Margin="0,4,0,12"
+                    Command="{Binding SuivantsCommand}"
+                    IsVisible="{Binding AfficherSuivants}" />
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <VerticalStackLayout Grid.Row="2" IsVisible="{Binding EstEnseignant}">
+            <BoxView Style="{StaticResource Separateur}" />
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="12" Padding="16,12,16,16">
+                <Button
+                    Text="Exporter"
+                    ImageSource="ic_telecharger_primaire.png"
+                    Style="{StaticResource BoutonSecondaire}"
+                    Command="{Binding ExporterCommand}" />
+                <Button Grid.Column="1" Text="{Binding TexteBoutonPublier}" Command="{Binding PublierCommand}" />
+            </Grid>
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>

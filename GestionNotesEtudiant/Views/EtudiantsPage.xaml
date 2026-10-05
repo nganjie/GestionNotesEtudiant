@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="GestionNotesEtudiant.Views.EtudiantsPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:m="clr-namespace:GestionNotesEtudiant.Models"
+    xmlns:vm="clr-namespace:GestionNotesEtudiant.ViewModels"
+    x:DataType="vm:EtudiantsViewModel">
+
+    <Grid RowDefinitions="Auto,*">
+
+        <VerticalStackLayout Padding="16,28,16,0">
+            <Label Text="Étudiants" Style="{StaticResource TitreEcran}" />
+
+            <Border
+                Margin="0,18,0,0"
+                HeightRequest="50"
+                BackgroundColor="{StaticResource Surface}"
+                StrokeShape="RoundRectangle 10">
+                <Grid ColumnDefinitions="Auto,*" Padding="14,0,8,0" ColumnSpacing="8">
+                    <Image Source="ic_recherche.png" WidthRequest="20" HeightRequest="20" VerticalOptions="Center" />
+                    <Entry
+                        Grid.Column="1"
+                        Text="{Binding Recherche}"
+                        Placeholder="Nom ou matricule"
+                        VerticalOptions="Center"
+                        ReturnType="Search"
+                        ClearButtonVisibility="WhileEditing" />
+                </Grid>
+            </Border>
+
+            <HorizontalStackLayout Spacing="10" Margin="0,12,0,14" BindableLayout.ItemsSource="{Binding Promotions}">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="vm:FiltrePromotion">
+                        <Border
+                            Padding="15,10"
+                            StrokeShape="RoundRectangle 22"
+                            BackgroundColor="{StaticResource Surface}">
+                            <Border.Triggers>
+                                <DataTrigger TargetType="Border" Binding="{Binding Selectionne}" Value="True">
+                                    <Setter Property="BackgroundColor" Value="{StaticResource PrimaireClair}" />
+                                    <Setter Property="Stroke" Value="{StaticResource Primaire}" />
+                                </DataTrigger>
+                            </Border.Triggers>
+                            <Label Text="{Binding Libelle}" FontSize="15">
+                                <Label.Triggers>
+                                    <DataTrigger TargetType="Label" Binding="{Binding Selectionne}" Value="True">
+                                        <Setter Property="TextColor" Value="{StaticResource Primaire}" />
+                                        <Setter Property="FontFamily" Value="{StaticResource PoliceDemiGras}" />
+                                    </DataTrigger>
+                                </Label.Triggers>
+                            </Label>
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer
+                                    Command="{Binding ChoisirPromotionCommand, Source={RelativeSource AncestorType={x:Type vm:EtudiantsViewModel}}, x:DataType=vm:EtudiantsViewModel}"
+                                    CommandParameter="{Binding .}" />
+                            </Border.GestureRecognizers>
+                        </Border>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </HorizontalStackLayout>
+        </VerticalStackLayout>
+
+        <Grid Grid.Row="1" BackgroundColor="{StaticResource Surface}">
+            <BoxView Style="{StaticResource Separateur}" VerticalOptions="Start" />
+            <CollectionView ItemsSource="{Binding Etudiants}" SelectionMode="None">
+                <CollectionView.EmptyView>
+                    <VerticalStackLayout Padding="16,32" Spacing="6">
+                        <Label Text="Aucun étudiant trouvé" Style="{StaticResource Libelle}" />
+                        <Label Text="Vérifiez l'orthographe du nom ou le matricule." Style="{StaticResource TexteCourantSecondaire}" />
+                    </VerticalStackLayout>
+                </CollectionView.EmptyView>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="m:Etudiant">
+                        <VerticalStackLayout Padding="16,0">
+                            <Grid ColumnDefinitions="*,Auto" Padding="0,11">
+                                <VerticalStackLayout Spacing="1">
+                                    <Label Text="{Binding NomComplet}" Style="{StaticResource Libelle}" />
+                                    <Label Style="{StaticResource TexteSecondaire}">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="Matricule " />
+                                                <Span Text="{Binding Matricule}" />
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                </VerticalStackLayout>
+                                <Image Grid.Column="1" Source="ic_chevron.png" WidthRequest="18" HeightRequest="18" VerticalOptions="Center" />
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Command="{Binding OuvrirCommand, Source={RelativeSource AncestorType={x:Type vm:EtudiantsViewModel}}, x:DataType=vm:EtudiantsViewModel}"
+                                        CommandParameter="{Binding .}" />
+                                </Grid.GestureRecognizers>
+                            </Grid>
+                            <BoxView Style="{StaticResource Separateur}" />
+                        </VerticalStackLayout>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+                <CollectionView.Footer>
+                    <Button
+                        Text="{Binding TextePlus}"
+                        Style="{StaticResource BoutonLien}"
+                        FontSize="15"
+                        HorizontalOptions="Center"
+                        Margin="0,4,0,12"
+                        Command="{Binding PlusCommand}"
+                        IsVisible="{Binding AfficherPlus}" />
+                </CollectionView.Footer>
+            </CollectionView>
+        </Grid>
+    </Grid>
+</ContentPage>

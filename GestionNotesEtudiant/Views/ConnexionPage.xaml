@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="GestionNotesEtudiant.Views.ConnexionPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:c="clr-namespace:GestionNotesEtudiant.Controls"
+    xmlns:vm="clr-namespace:GestionNotesEtudiant.ViewModels"
+    x:DataType="vm:ConnexionViewModel"
+    BackgroundColor="{StaticResource Surface}">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="24,16,24,24">
+
+            <HorizontalStackLayout HorizontalOptions="Center" Spacing="4">
+                <Label Text="Pas encore de compte ?" Style="{StaticResource TexteCourantSecondaire}" VerticalOptions="Center" />
+                <Label Text="Créer un compte" Style="{StaticResource Lien}" VerticalOptions="Center" Padding="2,12">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding CreerCompteCommand}" />
+                    </Label.GestureRecognizers>
+                </Label>
+            </HorizontalStackLayout>
+
+            <!-- Marque -->
+            <HorizontalStackLayout Margin="0,110,0,0" Spacing="12">
+                <Border
+                    BackgroundColor="{StaticResource Primaire}"
+                    StrokeThickness="0"
+                    StrokeShape="RoundRectangle 9"
+                    WidthRequest="38"
+                    HeightRequest="38">
+                    <Label
+                        Text="/20"
+                        FontFamily="{StaticResource PoliceGras}"
+                        FontSize="14"
+                        TextColor="{StaticResource Surface}"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center" />
+                </Border>
+                <Label Text="Barème" FontFamily="{StaticResource PoliceGras}" FontSize="22" VerticalOptions="Center" />
+            </HorizontalStackLayout>
+
+            <Label Text="Bon retour." Style="{StaticResource TitreEcran}" Margin="0,40,0,8" />
+            <Label Text="Connectez-vous pour saisir et publier vos notes." Style="{StaticResource TexteCourantSecondaire}" />
+
+            <Label Text="Adresse e-mail" Style="{StaticResource LibelleChamp}" Margin="0,28,0,8" />
+            <c:ChampSaisie
+                x:Name="ChampEmail"
+                Text="{Binding Email}"
+                Placeholder="nom@etablissement.cm"
+                Clavier="Email"
+                ReturnType="Next"
+                MessageErreur="{Binding ErreurEmail}" />
+
+            <Label Text="Mot de passe" Style="{StaticResource LibelleChamp}" Margin="0,20,0,8" />
+            <c:ChampSaisie
+                x:Name="ChampMotDePasse"
+                Text="{Binding MotDePasse}"
+                Placeholder="Votre mot de passe"
+                EstMotDePasse="True"
+                ReturnType="Go"
+                EnErreur="{Binding ErreurConnexion, Converter={StaticResource TexteNonVide}}" />
+
+            <Label
+                Text="Mot de passe oublié ?"
+                Style="{StaticResource Lien}"
+                FontSize="14"
+                HorizontalOptions="End"
+                Padding="0,14">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding MotDePasseOublieCommand}" />
+                </Label.GestureRecognizers>
+            </Label>
+
+            <HorizontalStackLayout
+                Spacing="6"
+                Margin="0,0,0,12"
+                IsVisible="{Binding ErreurConnexion, Converter={StaticResource TexteNonVide}}">
+                <Image Source="ic_alerte_erreur.png" WidthRequest="16" HeightRequest="16" VerticalOptions="Center" />
+                <Label Text="{Binding ErreurConnexion}" TextColor="{StaticResource Erreur}" FontSize="14" VerticalOptions="Center" />
+            </HorizontalStackLayout>
+
+            <Grid>
+                <Button Text="Se connecter" Command="{Binding ConnecterCommand}" />
+                <ActivityIndicator
+                    IsRunning="{Binding EstOccupe}"
+                    IsVisible="{Binding EstOccupe}"
+                    Color="{StaticResource TexteSecondaire}"
+                    WidthRequest="22"
+                    HeightRequest="22"
+                    HorizontalOptions="End"
+                    Margin="0,0,18,0" />
+            </Grid>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="GestionNotesEtudiant.Views.PublicationPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:c="clr-namespace:GestionNotesEtudiant.Controls"
+    xmlns:vm="clr-namespace:GestionNotesEtudiant.ViewModels"
+    Shell.TabBarIsVisible="False"
+    x:DataType="vm:PublicationViewModel">
+
+    <Grid RowDefinitions="Auto,*,Auto">
+
+        <c:EnTete Titre="Publier les notes" SousTitre="{Binding SousTitre}" Margin="0,16,0,0" />
+
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="16,16,16,16" Spacing="16">
+
+                <!-- Vérifications avant publication -->
+                <Border Style="{StaticResource Carte}" Padding="16,4">
+                    <VerticalStackLayout BindableLayout.ItemsSource="{Binding Verifications}">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="vm:Verification">
+                                <VerticalStackLayout>
+                                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12" Padding="0,14">
+                                        <Image Source="{Binding Icone}" WidthRequest="18" HeightRequest="18" VerticalOptions="Start" Margin="0,2,0,0" />
+                                        <VerticalStackLayout Grid.Column="1" Spacing="2">
+                                            <Label Text="{Binding Titre}" Style="{StaticResource Libelle}" />
+                                            <Label Text="{Binding Detail}" Style="{StaticResource TexteSecondaire}" />
+                                        </VerticalStackLayout>
+                                    </Grid>
+                                    <BoxView Style="{StaticResource Separateur}" IsVisible="{Binding Separateur}" />
+                                </VerticalStackLayout>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Options -->
+                <Border Style="{StaticResource Carte}" Padding="16,4">
+                    <VerticalStackLayout>
+                        <Grid ColumnDefinitions="*,Auto" Padding="0,12">
+                            <VerticalStackLayout Spacing="2" VerticalOptions="Center">
+                                <Label Text="Notifier les étudiants" Style="{StaticResource Libelle}" />
+                                <Label Text="Une notification, sans e-mail" Style="{StaticResource TexteSecondaire}" />
+                            </VerticalStackLayout>
+                            <Switch Grid.Column="1" IsToggled="{Binding NotifierEtudiants}" VerticalOptions="Center" />
+                        </Grid>
+                        <BoxView Style="{StaticResource Separateur}" />
+                        <Grid ColumnDefinitions="*,Auto" Padding="0,12">
+                            <VerticalStackLayout Spacing="2" VerticalOptions="Center">
+                                <Label Text="Afficher le rang" Style="{StaticResource Libelle}" />
+                                <Label Text="Visible par chaque étudiant" Style="{StaticResource TexteSecondaire}" />
+                            </VerticalStackLayout>
+                            <Switch Grid.Column="1" IsToggled="{Binding AfficherRang}" VerticalOptions="Center" />
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+
+                <Label Text="{Binding Avertissement}" Style="{StaticResource TexteSecondaire}" FontSize="14" LineHeight="1.3" />
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <VerticalStackLayout Grid.Row="2" BackgroundColor="{StaticResource Surface}" Spacing="4">
+            <BoxView Style="{StaticResource Separateur}" />
+            <Button Text="{Binding TexteBouton}" Command="{Binding PublierCommand}" Margin="16,12,16,0" />
+            <Button Text="Plus tard" Style="{StaticResource BoutonLien}" Command="{Binding PlusTardCommand}" HorizontalOptions="Center" Margin="0,0,0,8" />
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>

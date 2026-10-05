@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="GestionNotesEtudiant.Views.NouvelleEvaluationPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:c="clr-namespace:GestionNotesEtudiant.Controls"
+    xmlns:vm="clr-namespace:GestionNotesEtudiant.ViewModels"
+    Shell.TabBarIsVisible="False"
+    x:DataType="vm:NouvelleEvaluationViewModel"
+    Shell.PresentationMode="ModalAnimated"
+    BackgroundColor="{StaticResource Surface}">
+
+    <Grid RowDefinitions="Auto,*,Auto">
+
+        <Grid ColumnDefinitions="*,Auto" Padding="16,24,8,0">
+            <VerticalStackLayout Spacing="2">
+                <Label Text="Nouvelle évaluation" Style="{StaticResource TitreBarre}" FontFamily="{StaticResource PoliceGras}" />
+                <Label Text="{Binding SousTitre}" Style="{StaticResource TexteSecondaire}" />
+            </VerticalStackLayout>
+            <ImageButton
+                Grid.Column="1"
+                Source="ic_fermer.png"
+                Style="{StaticResource BoutonIcone}"
+                Command="{Binding AnnulerCommand}"
+                SemanticProperties.Description="Fermer" />
+        </Grid>
+
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="16,0,16,16">
+                <Label Text="Intitulé" Style="{StaticResource LibelleChamp}" Margin="0,16,0,8" />
+                <c:ChampSaisie
+                    x:Name="ChampIntitule"
+                    Text="{Binding Intitule}"
+                    Placeholder="Ex. : Contrôle continu 2"
+                    LongueurMax="60"
+                    MessageErreur="{Binding ErreurIntitule}" />
+
+                <Label Text="Type" Style="{StaticResource LibelleChamp}" Margin="0,18,0,8" />
+                <c:Segmente Options="{Binding Types}" IndexSelectionne="{Binding IndexType}" />
+
+                <Grid ColumnDefinitions="*,*" ColumnSpacing="16" Margin="0,18,0,0">
+                    <VerticalStackLayout>
+                        <Label Text="Coefficient" Style="{StaticResource LibelleChamp}" />
+                        <Grid ColumnDefinitions="Auto,*,Auto">
+                            <Button
+                                Text="−"
+                                FontSize="22"
+                                Style="{StaticResource BoutonSecondaire}"
+                                TextColor="{StaticResource Encre}"
+                                BorderColor="{StaticResource Bordure}"
+                                BorderWidth="1"
+                                WidthRequest="50"
+                                HeightRequest="50"
+                                Padding="0"
+                                Command="{Binding DiminuerCommand}"
+                                IsEnabled="{Binding PeutDiminuer}"
+                                SemanticProperties.Description="Diminuer le coefficient" />
+                            <Label
+                                Grid.Column="1"
+                                Text="{Binding Coefficient}"
+                                FontFamily="{StaticResource PoliceGras}"
+                                FontSize="20"
+                                HorizontalOptions="Center"
+                                VerticalOptions="Center" />
+                            <Button
+                                Grid.Column="2"
+                                Text="+"
+                                FontSize="22"
+                                Style="{StaticResource BoutonSecondaire}"
+                                TextColor="{StaticResource Encre}"
+                                BorderColor="{StaticResource Bordure}"
+                                BorderWidth="1"
+                                WidthRequest="50"
+                                HeightRequest="50"
+                                Padding="0"
+                                Command="{Binding AugmenterCommand}"
+                                IsEnabled="{Binding PeutAugmenter}"
+                                SemanticProperties.Description="Augmenter le coefficient" />
+                        </Grid>
+                    </VerticalStackLayout>
+                    <VerticalStackLayout Grid.Column="1">
+                        <Label Text="Noté sur" Style="{StaticResource LibelleChamp}" />
+                        <c:ChampSaisie
+                            Text="{Binding NoteSur}"
+                            Clavier="Numeric"
+                            LongueurMax="5"
+                            MessageErreur="{Binding ErreurNoteSur}" />
+                    </VerticalStackLayout>
+                </Grid>
+
+                <Label Text="Date de l'évaluation" Style="{StaticResource LibelleChamp}" Margin="0,18,0,8" />
+                <Border HeightRequest="50" StrokeShape="RoundRectangle 10" BackgroundColor="{StaticResource Surface}">
+                    <Grid ColumnDefinitions="*,Auto" Padding="12,0">
+                        <DatePicker Date="{Binding Date}" Format="d MMM yyyy" VerticalOptions="Center" />
+                        <Image Grid.Column="1" Source="ic_calendrier.png" WidthRequest="20" HeightRequest="20" VerticalOptions="Center" InputTransparent="True" />
+                    </Grid>
+                </Border>
+
+                <Border
+                    BackgroundColor="{StaticResource PrimaireClair}"
+                    StrokeThickness="0"
+                    StrokeShape="RoundRectangle 10"
+                    Padding="16,14"
+                    Margin="0,20,0,0">
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                        <Image Source="ic_info_primaire.png" WidthRequest="17" HeightRequest="17" VerticalOptions="Start" Margin="0,2,0,0" />
+                        <Label Grid.Column="1" Text="{Binding InfoCoefficients}" FontSize="14" LineHeight="1.3" />
+                    </Grid>
+                </Border>
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <VerticalStackLayout Grid.Row="2" Spacing="4">
+            <BoxView Style="{StaticResource Separateur}" />
+            <Button Text="Créer l'évaluation" Command="{Binding CreerCommand}" Margin="16,12,16,0" />
+            <Button Text="Annuler" Style="{StaticResource BoutonLien}" Command="{Binding AnnulerCommand}" HorizontalOptions="Center" Margin="0,0,0,8" />
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>

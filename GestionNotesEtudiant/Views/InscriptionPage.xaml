@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="GestionNotesEtudiant.Views.InscriptionPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:c="clr-namespace:GestionNotesEtudiant.Controls"
+    xmlns:vm="clr-namespace:GestionNotesEtudiant.ViewModels"
+    x:DataType="vm:InscriptionViewModel"
+    BackgroundColor="{StaticResource Surface}">
+
+    <ContentPage.Resources>
+        <Style x:Key="Critere" TargetType="Label">
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="TextColor" Value="{StaticResource TexteSecondaire}" />
+            <Setter Property="VerticalOptions" Value="Center" />
+        </Style>
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="Auto,*,Auto">
+
+        <c:EnTete Titre="Créer un compte" Margin="8,8,0,0" />
+
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="24,8,24,16">
+
+                <Label Text="Je suis" Style="{StaticResource LibelleChamp}" Margin="0,8,0,8" />
+                <c:Segmente Options="{Binding Roles}" IndexSelectionne="{Binding IndexRole}" />
+
+                <Label Text="Nom complet" Style="{StaticResource LibelleChamp}" Margin="0,18,0,8" />
+                <c:ChampSaisie
+                    x:Name="ChampNom"
+                    Text="{Binding NomComplet}"
+                    Placeholder="Prénom et nom"
+                    ReturnType="Next"
+                    MessageErreur="{Binding ErreurNom}" />
+
+                <Label Text="E-mail institutionnel" Style="{StaticResource LibelleChamp}" Margin="0,18,0,8" />
+                <c:ChampSaisie
+                    x:Name="ChampEmail"
+                    Text="{Binding Email}"
+                    Placeholder="nom@etablissement.cm"
+                    Clavier="Email"
+                    ReturnType="Next"
+                    MessageErreur="{Binding ErreurEmail}" />
+
+                <Label Text="Mot de passe" Style="{StaticResource LibelleChamp}" Margin="0,18,0,8" />
+                <c:ChampSaisie
+                    x:Name="ChampMotDePasse"
+                    Text="{Binding MotDePasse}"
+                    Placeholder="8 caractères minimum"
+                    EstMotDePasse="True"
+                    ReturnType="Next" />
+
+                <HorizontalStackLayout Spacing="16" Margin="0,8,0,0">
+                    <HorizontalStackLayout Spacing="3">
+                        <Image Source="ic_coche_succes.png" WidthRequest="13" HeightRequest="13" IsVisible="{Binding HuitCaracteres}" VerticalOptions="Center" />
+                        <Label Text="8 caractères minimum" Style="{StaticResource Critere}">
+                            <Label.Triggers>
+                                <DataTrigger TargetType="Label" Binding="{Binding HuitCaracteres}" Value="True">
+                                    <Setter Property="TextColor" Value="{StaticResource Succes}" />
+                                </DataTrigger>
+                            </Label.Triggers>
+                        </Label>
+                    </HorizontalStackLayout>
+                    <HorizontalStackLayout Spacing="3">
+                        <Image Source="ic_coche_succes.png" WidthRequest="13" HeightRequest="13" IsVisible="{Binding UneLettre}" VerticalOptions="Center" />
+                        <Label Text="Une lettre" Style="{StaticResource Critere}">
+                            <Label.Triggers>
+                                <DataTrigger TargetType="Label" Binding="{Binding UneLettre}" Value="True">
+                                    <Setter Property="TextColor" Value="{StaticResource Succes}" />
+                                </DataTrigger>
+                            </Label.Triggers>
+                        </Label>
+                    </HorizontalStackLayout>
+                    <HorizontalStackLayout Spacing="3">
+                        <Image Source="ic_coche_succes.png" WidthRequest="13" HeightRequest="13" IsVisible="{Binding UnChiffre}" VerticalOptions="Center" />
+                        <Label Text="Un chiffre" Style="{StaticResource Critere}">
+                            <Label.Triggers>
+                                <DataTrigger TargetType="Label" Binding="{Binding UnChiffre}" Value="True">
+                                    <Setter Property="TextColor" Value="{StaticResource Succes}" />
+                                </DataTrigger>
+                            </Label.Triggers>
+                        </Label>
+                    </HorizontalStackLayout>
+                </HorizontalStackLayout>
+
+                <Label Text="Confirmer le mot de passe" Style="{StaticResource LibelleChamp}" Margin="0,18,0,8" />
+                <c:ChampSaisie
+                    x:Name="ChampConfirmation"
+                    Text="{Binding Confirmation}"
+                    Placeholder="Saisissez-le à nouveau"
+                    EstMotDePasse="True"
+                    ReturnType="Done"
+                    IsEnabled="{Binding MotDePasseValide}"
+                    MessageErreur="{Binding ErreurConfirmation}" />
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <VerticalStackLayout Grid.Row="2" Padding="24,8,24,16" Spacing="12" BackgroundColor="{StaticResource Surface}">
+            <Label
+                Text="Corrigez les champs signalés pour continuer."
+                Style="{StaticResource TexteSecondaire}"
+                IsVisible="{Binding AfficherAide}" />
+            <Label
+                Text="{Binding ErreurServeur}"
+                TextColor="{StaticResource Erreur}"
+                FontSize="13"
+                IsVisible="{Binding ErreurServeur, Converter={StaticResource TexteNonVide}}" />
+            <Button Text="Créer mon compte" Command="{Binding CreerCommand}" />
+            <HorizontalStackLayout HorizontalOptions="Center" Spacing="4">
+                <Label Text="Déjà inscrit ?" Style="{StaticResource TexteCourantSecondaire}" VerticalOptions="Center" />
+                <Label Text="Se connecter" Style="{StaticResource Lien}" VerticalOptions="Center" Padding="2,8">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding SeConnecterCommand}" />
+                    </Label.GestureRecognizers>
+                </Label>
+            </HorizontalStackLayout>
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>

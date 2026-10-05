@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="GestionNotesEtudiant.Views.UePage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:c="clr-namespace:GestionNotesEtudiant.Controls"
+    xmlns:vm="clr-namespace:GestionNotesEtudiant.ViewModels"
+    Shell.TabBarIsVisible="False"
+    x:DataType="vm:UeViewModel"
+    BackgroundColor="{StaticResource Surface}">
+
+    <Grid RowDefinitions="Auto,*,Auto">
+
+        <!-- En-tête de l'UE -->
+        <VerticalStackLayout BackgroundColor="{StaticResource Fond}" Padding="0,16,0,0">
+            <c:EnTete Titre="{Binding Code}">
+                <c:EnTete.Action>
+                    <ImageButton
+                        Source="ic_telecharger.png"
+                        Style="{StaticResource BoutonIcone}"
+                        Margin="0,0,-10,0"
+                        Command="{Binding ExporterCommand}"
+                        SemanticProperties.Description="Exporter les notes" />
+                </c:EnTete.Action>
+            </c:EnTete>
+            <Label Text="{Binding Intitule}" Style="{StaticResource TitreSection}" Margin="16,18,16,4" />
+            <Label Text="{Binding Details}" Style="{StaticResource TexteSecondaire}" Margin="16,0,16,14" />
+            <BoxView Style="{StaticResource Separateur}" />
+        </VerticalStackLayout>
+
+        <!-- État vide -->
+        <VerticalStackLayout Grid.Row="1" Padding="34,72,34,0" Spacing="12" IsVisible="{Binding EstVide}">
+            <Image Source="illus_vide.png" WidthRequest="76" HeightRequest="57" HorizontalOptions="Start" Margin="0,0,0,8" />
+            <Label Text="Aucune évaluation pour l'instant" FontFamily="{StaticResource PoliceGras}" FontSize="20" />
+            <Label
+                Text="Créez une première évaluation pour commencer à saisir les notes de cette UE. La moyenne se calculera dès la première note."
+                Style="{StaticResource TexteCourantSecondaire}" />
+            <Button
+                Text="Créer une évaluation"
+                ImageSource="ic_plus_blanc.png"
+                Command="{Binding AjouterCommand}"
+                HorizontalOptions="Start"
+                Margin="0,12,0,0" />
+        </VerticalStackLayout>
+
+        <!-- Évaluations -->
+        <ScrollView Grid.Row="1" IsVisible="{Binding AfficherEvaluations}">
+            <VerticalStackLayout Padding="16,0">
+                <Grid ColumnDefinitions="*,*" Padding="0,18">
+                    <VerticalStackLayout Spacing="2">
+                        <Label Text="Moyenne provisoire" Style="{StaticResource TexteSecondaire}" />
+                        <Label>
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="{Binding MoyenneProvisoire}" FontFamily="{StaticResource PoliceGras}" FontSize="28" />
+                                    <Span Text=" /20" FontSize="15" TextColor="{StaticResource TexteSecondaire}" />
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                    </VerticalStackLayout>
+                    <VerticalStackLayout Grid.Column="1" Spacing="2">
+                        <Label Text="Somme des coefficients" Style="{StaticResource TexteSecondaire}" />
+                        <Label Text="{Binding SommeCoefficients}" FontFamily="{StaticResource PoliceGras}" FontSize="28" />
+                    </VerticalStackLayout>
+                </Grid>
+                <BoxView Style="{StaticResource Separateur}" />
+
+                <Grid ColumnDefinitions="*,Auto" Padding="0,10,0,4">
+                    <Label Text="Évaluations" Style="{StaticResource Libelle}" VerticalOptions="Center" />
+                    <Button
+                        Grid.Column="1"
+                        Text="Ajouter"
+                        ImageSource="ic_plus_primaire.png"
+                        Style="{StaticResource BoutonLien}"
+                        FontSize="15"
+                        Margin="0,0,-8,0"
+                        Command="{Binding AjouterCommand}" />
+                </Grid>
+
+                <VerticalStackLayout BindableLayout.ItemsSource="{Binding Evaluations}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="vm:EvaluationItem">
+                            <VerticalStackLayout>
+                                <Grid ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="12" Padding="0,14">
+                                    <Border
+                                        BackgroundColor="{StaticResource Fond}"
+                                        StrokeThickness="0"
+                                        StrokeShape="RoundRectangle 8"
+                                        WidthRequest="44"
+                                        HeightRequest="46"
+                                        VerticalOptions="Center">
+                                        <VerticalStackLayout VerticalOptions="Center" Spacing="-2">
+                                            <Label Text="coef." FontSize="11" TextColor="{StaticResource TexteSecondaire}" HorizontalOptions="Center" />
+                                            <Label Text="{Binding Coefficient}" FontFamily="{StaticResource PoliceGras}" FontSize="17" HorizontalOptions="Center" />
+                                        </VerticalStackLayout>
+                                    </Border>
+                                    <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="2">
+                                        <Label Text="{Binding Intitule}" Style="{StaticResource Libelle}" />
+                                        <Label Text="{Binding Details}" Style="{StaticResource TexteSecondaire}" />
+                                    </VerticalStackLayout>
+                                    <VerticalStackLayout Grid.Column="2" VerticalOptions="Center" Spacing="4">
+                                        <Label Text="{Binding Moyenne}" FontFamily="{StaticResource PoliceDemiGras}" FontSize="16" HorizontalOptions="End" />
+                                        <c:Etiquette Texte="{Binding Statut}" Variante="{Binding VarianteStatut}" HorizontalOptions="End" />
+                                    </VerticalStackLayout>
+                                    <Image Grid.Column="3" Source="ic_chevron.png" WidthRequest="18" HeightRequest="18" VerticalOptions="Center" />
+                                    <Grid.GestureRecognizers>
+                                        <TapGestureRecognizer
+                                            Command="{Binding OuvrirEvaluationCommand, Source={RelativeSource AncestorType={x:Type vm:UeViewModel}}, x:DataType=vm:UeViewModel}"
+                                            CommandParameter="{Binding .}" />
+                                    </Grid.GestureRecognizers>
+                                </Grid>
+                                <BoxView Style="{StaticResource Separateur}" />
+                            </VerticalStackLayout>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- Action principale -->
+        <VerticalStackLayout Grid.Row="2" IsVisible="{Binding AfficherEvaluations}">
+            <BoxView Style="{StaticResource Separateur}" />
+            <Button
+                Text="Voir les moyennes"
+                ImageSource="ic_tableau_blanc.png"
+                Command="{Binding VoirMoyennesCommand}"
+                Margin="16,12,16,16" />
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>

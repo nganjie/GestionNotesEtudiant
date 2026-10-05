@@ -1,17 +1,12 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+namespace GestionNotesEtudiant;
 
-namespace GestionNotesEtudiant
+public partial class App : Application
 {
-    public partial class App : Application
+    public App()
     {
-        public App()
-        {
-            InitializeComponent();
-        }
-
-        protected override Window CreateWindow(IActivationState? activationState)
-        {
-            return new Window(new AppShell());
-        }
+        InitializeComponent();
+        UserAppTheme = AppTheme.Light;
     }
+
+    protected override Window CreateWindow(IActivationState? activationState) => new(new AppShell());
 }
